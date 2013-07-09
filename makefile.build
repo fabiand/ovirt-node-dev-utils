@@ -1,0 +1,62 @@
+
+# release: make release WITH_RELEASE=3.0 WITH_BUILDNUMBER=1
+
+export OVIRT_CACHE_DIR=~/ovirt-cache/
+export OVIRT_LOCAL_REPO=file:///root/ovirt-cache/ovirt/
+
+TODAY :=$(shell date -u +%Y%m%d)
+BUILDEXTRA =
+WITH_BUILDNUMBER =$(TODAY)$(BUILDEXTRA)
+WITH_RELEASE=
+
+.PHONY = checksums
+
+
+all: iso
+	echo Done
+
+rpms:
+	cd ovirt-node && ./autogen.sh --with-image-minimizer && make publish
+
+iso: rpms
+	cd ovirt-node-iso && ./autogen.sh --with-recipe=/root/work/ovirt-node/recipe --with-build-number=$(WITH_BUILDNUMBER) && make version.ks && make iso
+
+checksums:
+	sha256sum *.iso > CHECKSUMS.sha256
+
+clean-cache:
+	rm -rvf ~/ovirt-cache/ovirt/*
+
+clean-rpmbuild:
+	rm -rvf ~/rpmbuild/RPMS/*
+	rm -rvf ~/rpmbuild/SRPMS/*
+
+clean-iso:
+	rm -vf ovirt-node-iso/*.iso
+
+relocate-iso:
+	mv -v ovirt-node-iso/*.iso .
+
+draft: BUILDEXTRA=draft
+draft: release
+	@echo "Draft done"
+
+git-update-to-master:
+	cd ovirt-node && git reset --hard && git checkout master && git fetch && git reset --hard origin/master
+	cd ovirt-node-iso && git reset --hard && git checkout master && git fetch && git reset --hard origin/master
+
+update-release: git-update-to-master
+	[[ "x$(WITH_RELEASE)" != "x" ]]
+	LC_ALL=en sed -i "/^Release:/ s/\(Release:[[:space:]]\+\)\([0-9]\+.[0-9]\+\)/\1$(WITH_RELEASE)/" ovirt-node/ovirt-node.spec.in ovirt-node-iso/ovirt-node-iso.spec.in
+	cd ovirt-node && git diff && git commit -asm"Setting release to $(WITH_RELEASE)"
+	cd ovirt-node-iso && git diff && git commit -asm"Setting release to $(WITH_RELEASE)"
+
+release: BUILDEXTRA=
+release: clean-cache clean-rpmbuild clean-iso update-release iso relocate-iso checksums
+	[[ "x$(WITH_BUILDNUMBER)" != "x" ]]
+	ls -1 ovirt-node/*.tar.*
+	ls -1 ~/rpmbuild/SRPMS/ovirt-node*$(WITH_RELEASE)*.src.rpm
+	ls -1 ~/ovirt-cache/ovirt/noarch/
+	ls -1 *.iso
+	@echo "Release with '$(WITH_RELEASE).$(WITH_BUILDNUMBER)' done"
+

@@ -75,4 +75,4 @@ install-build-requirements:
 		fedora-packager python-devel rpm-build \
 		createrepo selinux-policy-doc checkpolicy \
 		selinux-policy-devel autoconf automake \
-		python-mock
+		python-mock python-lockfile python-nose

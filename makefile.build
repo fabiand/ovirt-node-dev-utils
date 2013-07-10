@@ -21,6 +21,7 @@ help:
 	@echo ""
 	@echo "$(MAKE) release WITH_RELEASE=X.y WITH_BUILDNUMBER=z - Do a release build"
 	@echo ""
+	@echo "$(MAKE) clone-repos                - Clone ovirt-node and ovirt-node-iso repo into CWD"
 	@echo "$(MAKE) install-build-requirements - Install the packages required to build everything"
 	@echo ""
 
@@ -76,3 +77,7 @@ install-build-requirements:
 		createrepo selinux-policy-doc checkpolicy \
 		selinux-policy-devel autoconf automake \
 		python-mock python-lockfile python-nose
+
+clone-repos:
+	git clone http://gerrit.ovirt.org/p/ovirt-node.git
+	git clone http://gerrit.ovirt.org/p/ovirt-node-iso.git

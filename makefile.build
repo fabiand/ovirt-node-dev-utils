@@ -20,6 +20,10 @@ help:
 	@echo "$(MAKE) relocate-iso - Move the ISO into the CWD"
 	@echo ""
 	@echo "$(MAKE) release WITH_RELEASE=X.y WITH_BUILDNUMBER=z - Do a release build"
+	@echo ""
+	@echo "$(MAKE) install-build-requirements - Install the packages required to build everything"
+	@echo ""
+
 rpms:
 	cd ovirt-node && ./autogen.sh --with-image-minimizer && make publish
 
@@ -65,3 +69,10 @@ release: clean-cache clean-rpmbuild clean-iso update-release iso relocate-iso ch
 	ls -1 *.iso
 	@echo "Release with '$(WITH_RELEASE).$(WITH_BUILDNUMBER)' done"
 
+install-build-requirements:
+	yum install \
+		livecd-tools appliance-tools-minimizer \
+		fedora-packager python-devel rpm-build \
+		createrepo selinux-policy-doc checkpolicy \
+		selinux-policy-devel autoconf automake \
+		python-mock

@@ -12,9 +12,14 @@ WITH_RELEASE=
 .PHONY = checksums
 
 
-all: iso
-	echo Done
-
+help:
+	@echo ""
+	@echo "Usage:"
+	@echo "$(MAKE) rpms         - Build packages"
+	@echo "$(MAKE) iso          - Build packages and an ISO afterwards"
+	@echo "$(MAKE) relocate-iso - Move the ISO into the CWD"
+	@echo ""
+	@echo "$(MAKE) release WITH_RELEASE=X.y WITH_BUILDNUMBER=z - Do a release build"
 rpms:
 	cd ovirt-node && ./autogen.sh --with-image-minimizer && make publish
 

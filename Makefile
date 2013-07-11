@@ -19,7 +19,7 @@ help:
 	@echo ""
 	@echo " Debugging"
 	@echo " ---------"
-	@echo "$(MAKE) run-in-qemu cdrom=<isofilename>"
+	@echo "$(MAKE) run-iso-in-qemu iso=<isofilename>"
 	@echo ""
 
 include makefile.workspace

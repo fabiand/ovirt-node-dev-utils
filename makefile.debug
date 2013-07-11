@@ -1,13 +1,13 @@
 
-IMGNAME="a.img"
-IMGSIZE="30"
+IMGNAME=a.img
+IMGSIZE=30
 LOGFILE=qemu.log
 
-run-in-qemu-kvm:
-	[[ "x$(cdrom)" != "x" ]]
+run-iso-in-qemu-kvm:
+	[[ "x$(iso)" != "x" ]]
 	reset
 	rm -vf "$(IMGNAME)"
 	qemu-img create -f qcow2 "$(IMGNAME)" $(IMGSIZE)G
-	qemu-kvm -serial stdio -m 2048 -hda "$(IMGNAME)" -cdrom "$(cdrom)" | tee $(LOGFILE)
+	qemu-kvm -serial stdio -m 2048 -hda "$(IMGNAME)" -cdrom "$(iso)" | tee $(LOGFILE)
 	rm -vf "$(IMGNAME)"
 

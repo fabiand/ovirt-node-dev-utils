@@ -1,0 +1,14 @@
+
+install-build-requirements:
+	yum install \
+		livecd-tools appliance-tools-minimizer \
+		fedora-packager python-devel rpm-build \
+		createrepo selinux-policy-doc checkpolicy \
+		selinux-policy-devel autoconf automake \
+		python-mock python-lockfile python-nose \
+		libldm  # Required by libguestfs, and not pulled in ...
+
+clone-repos:
+	git clone http://gerrit.ovirt.org/p/ovirt-node.git
+	git clone http://gerrit.ovirt.org/p/ovirt-node-iso.git
+

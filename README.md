@@ -16,9 +16,13 @@ To get started and build an ISO:
 
     # Clone this repository
     $ git clone https://github.com/fabiand/ovirt-node-dev-utils.git dev-utils
+    $ cd dev-utils
 
     # ... install some build requirements
-    $ make -f dev-utils/makefile.build install-build-requirements clone-repos
+    $ make install-build-requirements clone-repos
 
     # ... and build the ISO
     $ make iso
+
+    # ... run the iso in qemu
+    $ make run-iso-in-qemu iso=$(ls -1 ovirt-node-iso/*.iso)

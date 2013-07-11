@@ -6,7 +6,8 @@ install-build-requirements:
 		createrepo selinux-policy-doc checkpolicy \
 		selinux-policy-devel autoconf automake \
 		python-mock python-lockfile python-nose \
-		libldm  # Required by libguestfs, and not pulled in ...
+		libldm \ # Required by libguestfs, and not pulled in ...
+		qemu-kvm
 
 clone-repos:
 	git clone http://gerrit.ovirt.org/p/ovirt-node.git

@@ -3,7 +3,7 @@ IMGNAME=a.img
 IMGSIZE=30
 LOGFILE=qemu.log
 
-run-iso-in-qemu-kvm:
+run-iso-in-qemu:
 	[[ "x$(iso)" != "x" ]]
 	reset
 	rm -vf "$(IMGNAME)"

@@ -11,7 +11,6 @@ help:
 	@echo "$(MAKE) relocate-iso - Move the ISO into the CWD"
 	@echo ""
 	@echo "$(MAKE) release WITH_RELEASE=<major>.<minor> WITH_BUILDNUMBER=<n> - Do a release build"
-	@echo "$(MAKE) make-release-tarball - Bundle all release related files into one tarball
 	@echo ""
 	@echo " Workspace"
 	@echo " ---------"

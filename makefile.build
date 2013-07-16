@@ -57,12 +57,11 @@ release: clean-cache clean-rpmbuild clean-iso git-update iso relocate-iso checks
 	ls -1 *.iso
 	@echo "Release with '$(WITH_RELEASE).$(WITH_BUILDNUMBER)' done"
 
-make-release-tarball: TARNAME=release-$(shell basename $$(ls -1 ovirt-node/*.tar.* | sed "s/\.gz//"))
+make-release-tarball: TARNAME=$(shell basename $$(ls -1 ovirt-node/*.tar.* | sed "s/\.tar\.gz//"))-release
 make-release-tarball: FILES=$(shell find ovirt-node/*.tar.* ~/rpmbuild/SRPMS/ovirt-node*.src.rpm ~/ovirt-cache/ovirt/noarch/ *.iso -type f)
 make-release-tarball:
 	mkdir $(TARNAME).d
 	cp -v $(FILES) $(TARNAME).d/
-	cd $(TARNAME).d/ && sha256sum * > CHECKSUMS.sha256
-	tar cvf $(TARNAME) $(TARNAME).d
+	zip -0rv $(TARNAME).zip $(TARNAME).d
 	rm -v $(TARNAME).d/*
 	rmdir $(TARNAME).d

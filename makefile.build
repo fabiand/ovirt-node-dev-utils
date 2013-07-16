@@ -51,7 +51,7 @@ release: clean-cache clean-rpmbuild clean-iso git-update-to-master iso relocate-
 	[[ "x$(WITH_BUILDNUMBER)" != "x" ]]
 	[[ "x$(WITH_RELEASE)" != "x" ]] && $(MAKE) update-release
 	ls -1 ovirt-node/*.tar.*
-	ls -1 ~/rpmbuild/SRPMS/ovirt-node*$(WITH_RELEASE)*.src.rpm
+	ls -1 ~/rpmbuild/SRPMS/ovirt-node*.src.rpm
 	ls -1 ~/ovirt-cache/ovirt/noarch/
 	ls -1 *.iso
 	@echo "Release with '$(WITH_RELEASE).$(WITH_BUILDNUMBER)' done"

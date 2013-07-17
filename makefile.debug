@@ -11,6 +11,6 @@ run-iso-in-qemu: create-adminpw
 	[[ "x$(iso)" != "x" ]]
 	rm -vf "$(IMGNAME)"
 	qemu-img create -f qcow2 "$(IMGNAME)" $(IMGSIZE)G
-	qemu-kvm -serial stdio -m 2048 -hda "$(IMGNAME)" -cdrom "$(iso)" | tee $(LOGFILE)
+	qemu-kvm -serial stdio -m 2048 -hda "$(IMGNAME)" -cdrom "$(iso)" $(WITH_QEMU_ARGS) | tee $(LOGFILE)
 	rm -vf "$(IMGNAME)"
 

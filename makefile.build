@@ -1,8 +1,8 @@
 
 # release: make release WITH_RELEASE=3.0 WITH_BUILDNUMBER=1
 
-export OVIRT_CACHE_DIR=~/ovirt-cache/
-export OVIRT_LOCAL_REPO=file:///root/ovirt-cache/ovirt/
+export OVIRT_CACHE_DIR=$(shell echo $$HOME)/ovirt-cache/
+export OVIRT_LOCAL_REPO=file://$(OVIRT_CACHE_DIR)/ovirt/
 
 TODAY :=$(shell date -u +%Y%m%d)
 BUILDEXTRA =

@@ -32,7 +32,7 @@ relocate-iso:
 	mv -v ovirt-node-iso/*.iso .
 
 draft: BUILDEXTRA=draft
-draft: release
+draft: clean-iso iso relocate-iso
 	@echo "Draft done"
 
 git-update:

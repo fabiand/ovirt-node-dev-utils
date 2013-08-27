@@ -36,8 +36,8 @@ draft: clean-iso iso relocate-iso
 	@echo "Draft done"
 
 git-update:
-	cd ovirt-node && git reset --hard && git checkout $(WITH_GIT_BRANCH) && git fetch && git reset --hard origin/$(WITH_GIT_BRANCH)
-	cd ovirt-node-iso && git reset --hard && git checkout $(WITH_GIT_BRANCH) && git fetch && git reset --hard origin/$(WITH_GIT_BRANCH)
+	cd ovirt-node && git reset --hard && git checkout $(WITH_GIT_BRANCH) && git fetch && git reset --hard $(WITH_GIT_BRANCH)
+	cd ovirt-node-iso && git reset --hard && git checkout $(WITH_GIT_BRANCH) && git fetch && git reset --hard $(WITH_GIT_BRANCH)
 
 update-release:
 	LC_ALL=en sed -i "/^Release:/ s/\(Release:[[:space:]]\+\)\([0-9]\+.[0-9]\+\)/\1$(WITH_RELEASE)/" ovirt-node/ovirt-node.spec.in ovirt-node-iso/ovirt-node-iso.spec.in

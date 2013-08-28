@@ -61,7 +61,9 @@ release-package:
 	mkdir $(PKGNAME)
 	cp -v $(FILES) $(PKGNAME)/
 	cd $(PKGNAME) && sha256sum * > CHECKSUMS.sha256
-	ls $(PKGNAME)/* | cpio --create --format=crc --verbose > $(PKGNAME).cpio
-	cpio --extract --only-verify-crc < $(PKGNAME).cpio
+	ls $(PKGNAME)/* | zip -r -0 -@ -v $(PKGNAME).zip
+	zip -T $(PKGNAME).zip
+	#ls $(PKGNAME)/* | cpio --create --format=crc --verbose > $(PKGNAME).cpio
+	#cpio --extract --only-verify-crc < $(PKGNAME).cpio
 	rm -v $(PKGNAME)/*
 	rmdir $(PKGNAME)

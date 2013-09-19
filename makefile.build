@@ -4,7 +4,7 @@
 export OVIRT_CACHE_DIR=$(shell echo $$HOME)/ovirt-cache/
 export OVIRT_LOCAL_REPO=file://$(OVIRT_CACHE_DIR)/ovirt/
 
-TODAY :=$(shell date -u +%Y%m%d)
+TODAY :=$(shell date -u +%Y%m%d%H%M)
 BUILDEXTRA =
 WITH_BUILDNUMBER =$(TODAY)$(BUILDEXTRA)
 WITH_RELEASE=

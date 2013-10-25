@@ -43,15 +43,16 @@ git-update:
 	cd ovirt-node && git reset --hard && git checkout $(WITH_GIT_BRANCH) && git fetch && git reset --hard $(WITH_GIT_BRANCH)
 	cd ovirt-node-iso && git reset --hard && git checkout $(WITH_GIT_BRANCH) && git fetch && git reset --hard $(WITH_GIT_BRANCH)
 
-update-release:
-	LC_ALL=en sed -i "/^Release:/ s/\(Release:[[:space:]]\+\)\([0-9]\+.[0-9]\+\)/\1$(WITH_RELEASE)/" ovirt-node/ovirt-node.spec.in ovirt-node-iso/ovirt-node-iso.spec.in
-	cd ovirt-node && git diff && git commit -asm"Setting release to $(WITH_RELEASE)"
-	cd ovirt-node-iso && git diff && git commit -asm"Setting release to $(WITH_RELEASE)"
-
 release: BUILDEXTRA=
 release: clean-cache clean-rpmbuild clean-iso git-update iso relocate-iso release-package
 	[[ "x$(WITH_BUILDNUMBER)" != "x" ]]
-	if [[ "x$(WITH_RELEASE)" != "x" ]] ; then $(MAKE) update-release ; fi
+ifdef WITH_RELEASE
+       LC_ALL=en sed -i "/^Release:/ s/\(Release:[[:space:]]\+\)\([0-9]\+.[0-9]\+\)/\1$(WITH_RELEASE)/" ovirt-node/ovirt-node.spec.in ovirt-node-iso/ovirt-node-iso.spec.in
+       cd ovirt-node && git diff && git commit -asm"Setting release to $(WITH_RELEASE)"
+       cd ovirt-node-iso && git diff && git commit -asm"Setting release to $(WITH_RELEASE)"
+else
+       echo Not updating release
+endif
 	ls -1 ovirt-node/*.tar.*
 	ls -1 ~/rpmbuild/SRPMS/ovirt-node*.src.rpm
 	ls -1 ~/ovirt-cache/ovirt/noarch/

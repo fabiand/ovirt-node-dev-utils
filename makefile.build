@@ -12,7 +12,7 @@ WITH_GIT_BRANCH=master
 
 .PHONY = checksums
 
-rpms:
+rpms: cond-update-release
 	cd ovirt-node && ./autogen.sh --with-image-minimizer && make publish
 
 iso: rpms
@@ -35,6 +35,15 @@ versions-in-iso:
 	@echo "Packages in ISO: $(iso)"
 	isoinfo -J -i $(iso) -x /isolinux/manifest-rpm.txt | grep -i ovirt
 
+cond-update-release:
+ifdef WITH_RELEASE
+	LC_ALL=en sed -i "/^Release:/ s/\(Release:[[:space:]]\+\)\([0-9]\+.[0-9]\+\)/\1$(WITH_RELEASE)/" ovirt-node/ovirt-node.spec.in ovirt-node-iso/ovirt-node-iso.spec.in
+	cd ovirt-node && git diff && git commit -asm"Setting release to $(WITH_RELEASE)"
+	cd ovirt-node-iso && git diff && git commit -asm"Setting release to $(WITH_RELEASE)"
+else
+	echo Not updating release
+endif
+
 draft: BUILDEXTRA=draft
 draft: clean-iso iso relocate-iso
 	@echo "Draft done"
@@ -46,13 +55,6 @@ git-update:
 release: BUILDEXTRA=
 release: clean-cache clean-rpmbuild clean-iso git-update iso relocate-iso release-package
 	[[ "x$(WITH_BUILDNUMBER)" != "x" ]]
-ifdef WITH_RELEASE
-	LC_ALL=en sed -i "/^Release:/ s/\(Release:[[:space:]]\+\)\([0-9]\+.[0-9]\+\)/\1$(WITH_RELEASE)/" ovirt-node/ovirt-node.spec.in ovirt-node-iso/ovirt-node-iso.spec.in
-	cd ovirt-node && git diff && git commit -asm"Setting release to $(WITH_RELEASE)"
-	cd ovirt-node-iso && git diff && git commit -asm"Setting release to $(WITH_RELEASE)"
-else
-	echo Not updating release
-endif
 	ls -1 ovirt-node/*.tar.*
 	ls -1 ~/rpmbuild/SRPMS/ovirt-node*.src.rpm
 	ls -1 ~/ovirt-cache/ovirt/noarch/

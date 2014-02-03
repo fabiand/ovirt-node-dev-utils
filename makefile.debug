@@ -1,16 +1,21 @@
 
-IMGNAME=a.img
+IMGNAMES=hda.qcow2 hdb.qcow2
 IMGSIZE=30
 LOGFILE=qemu.log
 ADMINPW=r
 
+.PHONY=clean
+
 create-adminpw:
 	openssl passwd -salt RH $(ADMINPW)
 
-run-iso-in-qemu: create-adminpw
+%.qcow2:
+	qemu-img create -f qcow2 "$@" $(IMGSIZE)G
+
+run-iso-in-qemu: DISKS_ARGS=$(shell echo $(IMGNAMES) | sed 's/\(hd.\)[^ ]\+/-\1 &/g')
+run-iso-in-qemu: create-adminpw $(IMGNAMES)
 	[[ "x$(iso)" != "x" ]]
-	qemu-img create -f qcow2 "$(IMGNAME)" $(IMGSIZE)G
-	qemu-kvm -serial stdio -m 2048 -boot d -hda "$(IMGNAME)" -cdrom "$(iso)" -net user -net nic -net nic $(WITH_QEMU_ARGS) | tee $(LOGFILE)
+	qemu-kvm -serial stdio -m 2048 -boot d $(DISKS_ARGS) -cdrom "$(iso)" -net user -net nic -net nic $(WITH_QEMU_ARGS) | tee $(LOGFILE)
 
 clean:
-	rm -vf "$(IMGNAME)"
+	rm -vf $(IMGNAMES)

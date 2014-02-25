@@ -6,6 +6,7 @@ install-build-requirements:
 		createrepo selinux-policy-doc checkpolicy \
 		selinux-policy-devel autoconf automake \
 		python-mock python-lockfile python-nose \
+	        pykickstart \
 		libldm \ # Required by libguestfs, and not pulled in ...
 		qemu-kvm \
 		git-review

@@ -1,6 +1,6 @@
 
 install-build-requirements:
-	yum install \
+	yum -y install \
 		livecd-tools appliance-tools-minimizer \
 		fedora-packager python-devel rpm-build \
 		createrepo selinux-policy-doc checkpolicy \

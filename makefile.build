@@ -16,7 +16,7 @@ rpms: cond-update-release
 	cd ovirt-node && ./autogen.sh --with-image-minimizer && make publish
 
 iso: rpms
-	cd ovirt-node-iso && ./autogen.sh --with-recipe=/root/node-ws/dev-utils/ovirt-node/recipe && make version.ks && make iso
+	cd ovirt-node-iso && ./autogen.sh --with-recipe=../ovirt-node/recipe && make version.ks && make iso
 
 clean-cache:
 	rm -rvf ~/ovirt-cache/ovirt/*

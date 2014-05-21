@@ -1,6 +1,9 @@
 
+PKGCMD=yum
+
 install-build-requirements:
-	yum -y install \
+ifeq ($(shell grep -o "fedora:" /etc/system-release-cpe), "fedora:")
+	$(PKGCMD) install \
 		livecd-tools appliance-tools-minimizer \
 		fedora-packager python-devel rpm-build \
 		createrepo selinux-policy-doc checkpolicy \
@@ -10,6 +13,20 @@ install-build-requirements:
 		libldm \
 		qemu-kvm \
 		git-review
+endif
+ifeq ($(shell grep -o "fedora:" /etc/system-release-cpe), "fedora:")
+	$(PKGCMD) install \
+		livecd-tools appliance-tools-minimizer \
+		fedora-packager python-devel rpm-build \
+		createrepo selinux-policy-doc checkpolicy \
+		selinux-policy-devel autoconf automake \
+		python-mock python-lockfile python-nose \
+	        pykickstart \
+		libldm \
+		qemu-kvm \
+		git-review
+endif
+
 
 clone-repos:
 	git clone http://gerrit.ovirt.org/p/ovirt-node.git

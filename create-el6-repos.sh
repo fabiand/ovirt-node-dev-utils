@@ -53,16 +53,18 @@ rpmcat \
 
 ovirt33_repo() {
 rpmcat \
-    http://resources.ovirt.org/releases/3.3.3/rpm/EL/6/noarch/ovirt-release-el6-10-2.noarch.rpm \
+    http://resources.ovirt.org/releases/3.3.3/rpm/EL/6/noarch/ovirt-release-el6-10.0.1-3.noarch.rpm \
     ./etc/yum.repos.d/glusterfs-epel.repo \
     ./etc/yum.repos.d/el6-ovirt.repo
 }
 
 ovirt34_repo() {
+local LATESTRPM=http://resources.ovirt.org/releases/3.4.0-rc2/rpm/EL/6/noarch/ovirt-release-11.1.0-1.noarch.rpm
 rpmcat \
-    http://resources.ovirt.org/releases/3.4.0-beta3/rpm/EL/6/noarch/ovirt-release-11.0.0-1.noarch.rpm \
-    ./etc/yum.repos.d/glusterfs-epel.repo \
-    ./etc/yum.repos.d/el6-ovirt.repo
+    $LATESTRPM \
+    ./usr/share/ovirt-release/ovirt-epel.repo \
+    ./usr/share/ovirt-release/glusterfs-epel.repo \
+    ./usr/share/ovirt-release/ovirt.repo.in | sed "s/@DIST@/EL/g"
 }
 
 
@@ -88,7 +90,7 @@ EOF
 
 fedora_repo() {
 rpmcat \
-    http://download.fedoraproject.org/fedora/linux/releases/20/Fedora/x86_64/os/Packages/f/fedora-release-20-1.noarch.rpm
+    http://download.fedoraproject.org/fedora/linux/releases/20/Fedora/x86_64/os/Packages/f/fedora-release-20-1.noarch.rpm \
     ./etc/yum.repos.d/fedora.repo \
     ./etc/yum.repos.d/fedora-updates.repo
 }

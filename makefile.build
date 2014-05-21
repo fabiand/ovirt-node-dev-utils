@@ -8,15 +8,15 @@ TODAY :=$(shell date -u +%Y%m%d%H%M)
 BUILDEXTRA =
 WITH_BUILDNUMBER =$(TODAY)$(BUILDEXTRA)
 WITH_RELEASE=
-WITH_GIT_BRANCH=master
+WITH_GIT_BRANCH := master
 
-.PHONY = checksums
+.PHONY = checksums git-update iso relocate-iso release-package clean-iso
 
 rpms: cond-update-release
 	cd ovirt-node && ./autogen.sh --with-image-minimizer && make publish
 
 iso: rpms
-	cd ovirt-node-iso && ./autogen.sh --with-recipe=/root/node-ws/dev-utils/ovirt-node/recipe --with-build-number=$(WITH_BUILDNUMBER) && make version.ks && make iso
+	cd ovirt-node-iso && ./autogen.sh --with-recipe=/root/node-ws/dev-utils/ovirt-node/recipe && make version.ks && make iso
 
 clean-cache:
 	rm -rvf ~/ovirt-cache/ovirt/*
@@ -54,7 +54,6 @@ git-update:
 
 release: BUILDEXTRA=
 release: clean-cache clean-rpmbuild clean-iso git-update iso relocate-iso release-package
-	[[ "x$(WITH_BUILDNUMBER)" != "x" ]]
 	ls -1 ovirt-node/*.tar.*
 	ls -1 ~/rpmbuild/SRPMS/ovirt-node*.src.rpm
 	ls -1 ~/ovirt-cache/ovirt/noarch/
@@ -63,11 +62,16 @@ release: clean-cache clean-rpmbuild clean-iso git-update iso relocate-iso releas
 	cat ovirt-node-iso/version.ks
 
 release-package: PKGNAME=$(shell source ovirt-node-iso/version.ks ; echo $$PACKAGE-$$VERSION-$$RELEASE)-release
-release-package: FILES=$(shell find ovirt-node/*.tar.* ~/rpmbuild/SRPMS/ovirt-node*.src.rpm ~/ovirt-cache/ovirt/noarch/ *.iso -type f)
+release-package: SRCFILES=$(shell find ovirt-node/*.tar.* -type f)
+release-package: RPMFILES=~/rpmbuild/SRPMS/ ~/ovirt-cache/ovirt/noarch/
+release-package: ISOFILES=$(shell find *.iso -type f)
+release-package: DIST=$(shell rpm -E "%{DIST}" | tr -d ".")
 release-package:
-	mkdir $(PKGNAME)
-	cp -v $(FILES) $(PKGNAME)/
-	cd $(PKGNAME) && sha256sum * > CHECKSUMS.sha256
+	mkdir -p $(PKGNAME)/rpm/$(DIST) $(PKGNAME)/iso $(PKGNAME)/src
+	cp -av $(RPMFILES) $(PKGNAME)/rpm/$(DIST)/
+	cp -av $(ISOFILES) $(PKGNAME)/iso
+	cp -av $(SRCFILES) $(PKGNAME)/src
+	cd $(PKGNAME) && sha256sum $$(find . -type f) > CHECKSUMS.sha256
 	ls $(PKGNAME)/* | zip -r -0 -@ -v $(PKGNAME).zip
 	zip -T $(PKGNAME).zip
 	#ls $(PKGNAME)/* | cpio --create --format=crc --verbose > $(PKGNAME).cpio

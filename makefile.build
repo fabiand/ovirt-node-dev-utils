@@ -9,6 +9,7 @@ BUILDEXTRA =
 WITH_BUILDNUMBER =$(TODAY)$(BUILDEXTRA)
 WITH_RELEASE=
 WITH_GIT_BRANCH := master
+GIT_REMOTE := origin
 
 .PHONY = checksums git-update iso relocate-iso release-package clean-iso
 
@@ -49,8 +50,8 @@ draft: clean-iso iso relocate-iso
 	@echo "Draft done"
 
 git-update:
-	cd ovirt-node && git reset --hard && git checkout $(WITH_GIT_BRANCH) && git fetch && git reset --hard $(WITH_GIT_BRANCH)
-	cd ovirt-node-iso && git reset --hard && git checkout $(WITH_GIT_BRANCH) && git fetch && git reset --hard $(WITH_GIT_BRANCH)
+	cd ovirt-node && git reset --hard && git checkout $(WITH_GIT_BRANCH) && git fetch && git reset --hard $(GIT_REMOTE)/$(WITH_GIT_BRANCH)
+	cd ovirt-node-iso && git reset --hard && git checkout $(WITH_GIT_BRANCH) && git fetch && git reset --hard $(GIT_REMOTE)/$(WITH_GIT_BRANCH)
 
 release: BUILDEXTRA=
 release: clean-cache clean-rpmbuild clean-iso git-update iso relocate-iso release-package

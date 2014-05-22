@@ -1,6 +1,6 @@
 
 # release: make release WITH_GIT_BRANCH=origin/master
-# release: make release WITH_GIT_BRANCH=refs/tags/ovirt-node-3.0.4
+# release: make release WITH_NODE_BRANCH=refs/tags/ovirt-node-3.0.4 WITH_ISO_BRANCH=refs/tags/ovirt-node-iso-3.0.4
 # release: make release WITH_GIT_BRANCH=<commitid>
 
 export OVIRT_CACHE_DIR=$(shell echo $$HOME)/ovirt-cache/
@@ -10,8 +10,11 @@ TODAY :=$(shell date -u +%Y%m%d%H%M)
 BUILDEXTRA =
 WITH_BUILDNUMBER =$(TODAY)$(BUILDEXTRA)
 WITH_RELEASE=
-WITH_GIT_BRANCH := master
+
 GIT_REMOTE := origin
+WITH_GIT_BRANCH := master
+WITH_NODE_BRANCH := $(WITH_GIT_BRANCH)
+WITH_ISO_BRANCH := $(WITH_GIT_BRANCH)
 
 .PHONY = checksums git-update iso relocate-iso release-package clean-iso
 
@@ -52,8 +55,8 @@ draft: clean-iso iso relocate-iso
 	@echo "Draft done"
 
 git-update:
-	cd ovirt-node && git fetch $(GIT_ORIGIN) && git checkout $(WITH_GIT_BRANCH) && git reset --hard $(WITH_GIT_BRANCH) && git clean -fdx
-	cd ovirt-node-iso && git fetch $(GIT_ORIGIN) && git checkout $(WITH_GIT_BRANCH) && git fetch && git reset --hard $(WITH_GIT_BRANCH) && git clean -fdx
+	cd ovirt-node && git fetch $(GIT_ORIGIN) && git checkout $(WITH_NODE_BRANCH) && git reset --hard $(WITH_NODE_BRANCH) && git clean -fdx
+	cd ovirt-node-iso && git fetch $(GIT_ORIGIN) && git checkout $(WITH_ISO_BRANCH) && git fetch && git reset --hard $(WITH_ISO_BRANCH) && git clean -fdx
 
 release: BUILDEXTRA=
 release: clean-cache clean-rpmbuild clean-iso git-update iso relocate-iso release-package

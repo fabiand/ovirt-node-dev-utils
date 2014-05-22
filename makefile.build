@@ -1,6 +1,7 @@
 
 # release: make release WITH_GIT_BRANCH=origin/master
-# release: make release WITH_GIT_BRANCH=<committish>
+# release: make release WITH_GIT_BRANCH=refs/tags/ovirt-node-3.0.4
+# release: make release WITH_GIT_BRANCH=<commitid>
 
 export OVIRT_CACHE_DIR=$(shell echo $$HOME)/ovirt-cache/
 export OVIRT_LOCAL_REPO=file://$(OVIRT_CACHE_DIR)/ovirt/

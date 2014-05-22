@@ -69,6 +69,7 @@ release-package: RPMFILES=~/rpmbuild/SRPMS/ ~/ovirt-cache/ovirt/noarch/
 release-package: ISOFILES=$(shell find *.iso -type f)
 release-package: DIST=$(shell rpm -E "%{dist}" | tr -d ".")
 release-package:
+	test -n "$(PKGNAME)"
 	mkdir -p $(PKGNAME)/rpm/$(DIST) $(PKGNAME)/iso $(PKGNAME)/src
 	cp -av $(RPMFILES) $(PKGNAME)/rpm/$(DIST)/
 	cp -av $(ISOFILES) $(PKGNAME)/iso
@@ -78,5 +79,5 @@ release-package:
 	zip -T $(PKGNAME).zip
 	#ls $(PKGNAME)/* | cpio --create --format=crc --verbose > $(PKGNAME).cpio
 	#cpio --extract --only-verify-crc < $(PKGNAME).cpio
-	rm -v $(PKGNAME)/*
+	rm -rv $(PKGNAME)/*
 	rmdir $(PKGNAME)

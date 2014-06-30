@@ -19,7 +19,7 @@ WITH_ISO_BRANCH := $(WITH_GIT_BRANCH)
 .PHONY = checksums git-update iso relocate-iso release-package clean-iso
 
 rpms: cond-update-release
-	cd ovirt-node && ./autogen.sh --with-image-minimizer && make publish
+	cd ovirt-node && ./autogen.sh --with-image-minimizer && make rpm publish
 
 iso: rpms
 	cd ovirt-node-iso && ./autogen.sh --with-recipe=../ovirt-node/recipe && make version.ks && make iso
